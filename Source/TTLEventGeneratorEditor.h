@@ -20,25 +20,49 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PROCESSORPLUGINEDITOR_H_DEFINED
-#define PROCESSORPLUGINEDITOR_H_DEFINED
+#ifndef TTLEVENTGENERATOREDITOR_H_DEFINED
+#define TTLEVENTGENERATOREDITOR_H_DEFINED
 
 #include <EditorHeaders.h>
 
-class ProcessorPluginEditor : public GenericEditor
+class ManualTriggerButton : public ParameterEditor,
+   public Button::Listener
+{
+public:
+
+   /** Constructor */
+   ManualTriggerButton(Parameter* param);
+
+   /** Destructor*/
+   virtual ~ManualTriggerButton() { }
+
+   /** Respond to trigger button clicks*/
+   void buttonClicked(Button* label) override;
+
+   /** Update view of the parameter editor component*/
+   void updateView() {};
+
+   /** Sets component layout*/
+   void resized() override;
+
+private:
+   std::unique_ptr<UtilityButton> triggerButton;
+};
+
+class TTLEventGeneratorEditor : public GenericEditor
 {
 public:
 
 	/** Constructor */
-	ProcessorPluginEditor(GenericProcessor* parentNode);
+	TTLEventGeneratorEditor(GenericProcessor* parentNode);
 
 	/** Destructor */
-	~ProcessorPluginEditor() { }
+	~TTLEventGeneratorEditor() { }
 
 private:
 
 	/** Generates an assertion if this class leaks */
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProcessorPluginEditor);
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TTLEventGeneratorEditor);
 };
 
 #endif // PROCESSORPLUGINEDITOR_H_DEFINED
