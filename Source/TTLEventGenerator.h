@@ -20,20 +20,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PROCESSORPLUGIN_H_DEFINED
-#define PROCESSORPLUGIN_H_DEFINED
+#ifndef TTLEVENTGENERATOR_H_DEFINED
+#define TTLEVENTGENERATOR_H_DEFINED
 
 #include <ProcessorHeaders.h>
 
 
-class ProcessorPlugin : public GenericProcessor
+class TTLEventGenerator : public GenericProcessor
 {
+private:
+   EventChannel* ttlChannel; // local pointer to TTL output channel
+   int counter = 0; // counts the total number of incoming samples
+   bool state = false; // holds the state of the current TTL line (on or off)
+   bool shouldTriggerEvent = false;
+   bool eventWasTriggered = false;
+   int triggeredEventCounter = 0;
+
+   float eventIntervalMs = 1000.0f;
+   int outputLine = 0;
+
 public:
 	/** The class constructor, used to initialize any members. */
-	ProcessorPlugin();
+	TTLEventGenerator();
 
 	/** The class destructor, used to deallocate memory */
-	~ProcessorPlugin();
+	~TTLEventGenerator();
 
 	/** If the processor has a custom editor, this method must be defined to instantiate it. */
 	AudioProcessorEditor* createEditor() override;
@@ -48,6 +59,8 @@ public:
 		The process method is called every time a new data buffer is available.
 		Visualizer plugins typically use this method to send data to the canvas for display purposes */
 	void process(AudioBuffer<float>& buffer) override;
+
+	bool startAcquisition() override;
 
 	/** Handles events received by the processor
 		Called automatically for each received event whenever checkForEvents() is called from
@@ -71,6 +84,7 @@ public:
 		Parameter objects*/
 	void loadCustomParametersFromXml(XmlElement* parentElement) override;
 
+	void parameterValueChanged(Parameter* param) override;
 };
 
 #endif
